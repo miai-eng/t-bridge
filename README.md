@@ -4,7 +4,7 @@ A bilingual handover and staff-development tool for international preschools.
 
 *The "T" stands for the point where different cultures cross, and for Teaching and Team: the bridge this tool builds between staff.*
 
-> **Status:** Early stage. This repository currently contains the project plan and design principles. Development will proceed with an AI coding assistant.
+> **Status:** Phase 1 foundation is in place: Next.js + Supabase schema with RLS, fictional seed data, and a classroom list page. Phases 2–4 are not started yet.
 
 ## The problem
 
@@ -27,9 +27,25 @@ In bilingual preschools, English-speaking and Japanese-speaking staff work side 
 - Supabase (Postgres, auth, row-level security for role-based access)
 - LLM API for translation and training generation
 
+## Getting started
+
+1. Copy `.env.example` to `.env.local` and fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (the `sb_publishable_...` key from the Supabase dashboard).
+2. Apply the migrations and fictional seed data with the Supabase CLI:
+   ```sh
+   npx supabase login                          # first time only
+   npx supabase link --project-ref <your-ref>  # first time only
+   npx supabase db push --remote --include-seed
+   ```
+3. Start the dev server:
+   ```sh
+   npm install
+   npm run dev
+   ```
+
 ## Design principles
 
 - **Fictional data only.** No real children, families, staff, or facilities. See [docs/data-policy.md](docs/data-policy.md).
+  - The anonymous read-only RLS policy (`supabase/migrations/*_TEMP_dev_anon_read_access.sql`) is temporary, for development only, and will be removed when auth is added.
 - **Original text is the source of truth.** Translations are aids, never replacements.
 - **No stereotypes.** Training content addresses situations and behaviors, not nationalities. See [docs/training-design.md](docs/training-design.md).
 - **The questionnaire is not a psychological test.** It is a self-reported needs survey with original questions; it does not reproduce or imitate any commercial assessment instrument.
