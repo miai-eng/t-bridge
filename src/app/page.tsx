@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { currentFiscalYear } from "@/lib/fiscal-year";
 
@@ -50,6 +51,10 @@ function StaffNameDisplay({ s }: { s: StaffName }) {
 
 async function ClassroomList() {
   const supabase = await createClient();
+  // The fiscal year depends on the current date, so it must be computed per
+  // request, not frozen into a prerendered shell. connection() stops
+  // prerendering here.
+  await connection();
   const fiscalYear = currentFiscalYear();
 
   const { data, error } = await supabase
